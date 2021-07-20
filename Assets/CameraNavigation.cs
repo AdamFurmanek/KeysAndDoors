@@ -48,8 +48,11 @@ public class CameraNavigation : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray.origin, ray.direction, out hit))
             {
-                trackedObject = hit.transform.gameObject;
-                ResetZoom();
+                if (hit.transform.gameObject.tag == "Player")
+                {
+                    trackedObject = hit.transform.gameObject;
+                    ResetZoom();
+                }
             }
         }
 

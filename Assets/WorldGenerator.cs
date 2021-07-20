@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -14,15 +15,7 @@ public class WorldGenerator : MonoBehaviour
 
     void Awake()
     {
-        //Reset map to zeros.
-        map = new int[mapX, mapZ];
-        for (int x = 0; x < mapX; x++)
-        {
-            for (int z = 0; z < mapZ; z++)
-            {
-                map[x, z] = 0;
-            }
-        }
+        ResetMap();
 
         //Initial cross in the center of the map.
         int centrumX = mapX / 2, centrumZ = mapZ / 2;
@@ -43,57 +36,25 @@ public class WorldGenerator : MonoBehaviour
         ExpandRoad(3, true, false);
 
         //Istantiating.
+        IstantiateRooms();
+        if (bridgeLength > 0)
+        {
+            IstantiateBridges();
+        }
+
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+
+    void ResetMap()
+    {
+        map = new int[mapX, mapZ];
         for (int x = 0; x < mapX; x++)
         {
             for (int z = 0; z < mapZ; z++)
             {
-                if(map[x, z] != 0)
-                {
-                    GameObject toSpawn = null;
-
-                    switch(map[x, z])
-                    {
-                        case 1:
-                            toSpawn = EmptyRoom;
-                            break;
-                        case 2:
-                            toSpawn = DoorRoom;
-                            break;
-                        case 3:
-                            toSpawn = KeyRoom;
-                            break;
-                    }
-
-                    Instantiate(toSpawn, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
-                }
-
+                map[x, z] = 0;
             }
         }
-
-        for (int x = 0; x < mapX - 1; x++)
-        {
-            for (int z = 0; z < mapZ; z++)
-            {
-                if(map[x,z] != 0 && map[x + 1, z] != 0)
-                {
-                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength) + roomX/2 + bridgeLength/2, 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
-                    bridge.transform.localScale = new Vector3(bridgeLength/10, 1, 0.2f);
-                }
-            }
-        }
-
-        for (int x = 0; x < mapX; x++)
-        {
-            for (int z = 0; z < mapZ - 1; z++)
-            {
-                if (map[x, z] != 0 && map[x, z + 1] != 0)
-                {
-                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 0, 0));
-                    bridge.transform.localScale = new Vector3(0.2f, 1, bridgeLength / 10);
-                }
-            }
-        }
-
     }
 
     struct ExpandableRoad
@@ -214,6 +175,67 @@ public class WorldGenerator : MonoBehaviour
             return -1;
         else
             return map[x, z];
+    }
+
+    void IstantiateRooms()
+    {
+        int centrumX = mapX / 2, centrumZ = mapZ / 2;
+
+        for (int x = 0; x < mapX; x++)
+        {
+            for (int z = 0; z < mapZ; z++)
+            {
+                if (map[x, z] != 0)
+                {
+                    GameObject toSpawn = null;
+
+                    switch (map[x, z])
+                    {
+                        case 1:
+                            toSpawn = EmptyRoom;
+                            break;
+                        case 2:
+                            toSpawn = DoorRoom;
+                            break;
+                        case 3:
+                            toSpawn = KeyRoom;
+                            break;
+                    }
+
+                    Instantiate(toSpawn, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
+                }
+
+            }
+        }
+    }
+
+    void IstantiateBridges()
+    {
+        int centrumX = mapX / 2, centrumZ = mapZ / 2;
+
+        for (int x = 0; x < mapX - 1; x++)
+        {
+            for (int z = 0; z < mapZ; z++)
+            {
+                if (map[x, z] != 0 && map[x + 1, z] != 0)
+                {
+                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength) + roomX / 2 + bridgeLength / 2, 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
+                    bridge.transform.localScale = new Vector3(bridgeLength / 10, 1, 0.2f);
+                }
+            }
+        }
+
+        for (int x = 0; x < mapX; x++)
+        {
+            for (int z = 0; z < mapZ - 1; z++)
+            {
+                if (map[x, z] != 0 && map[x, z + 1] != 0)
+                {
+                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 0, 0));
+                    bridge.transform.localScale = new Vector3(0.2f, 1, bridgeLength / 10);
+                }
+            }
+        }
     }
 
 }
