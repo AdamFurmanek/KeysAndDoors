@@ -5,11 +5,12 @@ using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject EmptyRoom, DoorRoom, KeyRoom, Bridge;
+    [SerializeField] private GameObject EmptyRoom, DoorRoom, KeyRoom, EnemyRoom, Bridge;
 
     [SerializeField] private int mapX, mapZ;
     [SerializeField] private float roomX, roomZ, bridgeLength;
     [SerializeField] [Range(0, 1)] private float frontProbability, sideProbability;
+    [SerializeField] private int rooms, keys, doors, enemies;
 
     private int[,] map;
 
@@ -25,19 +26,23 @@ public class WorldGenerator : MonoBehaviour
         map[centrumX, centrumZ - 1] = 1;
         map[centrumX, centrumZ + 1] = 1;
 
-        //Generate empty rooms.
-        for (int i = 0; i < 100; i++)
+        //Generate rooms, doors, keys.
+        for (int i = 0; i < rooms; i++)
         {
             ExpandRoad(1, true, true);
         }
-
-        //Generate rooms with key and door.
-        ExpandRoad(2, true, false);
-        ExpandRoad(3, true, false);
-        ExpandRoad(3, true, false);
-        ExpandRoad(3, true, false);
-        ExpandRoad(3, true, false);
-        ExpandRoad(3, true, false);
+        for (int i = 0; i < enemies; i++)
+        {
+            ExpandRoad(4, true, true);
+        }
+        for (int i = 0; i < doors; i++)
+        {
+            ExpandRoad(2, true, false);
+        }
+        for (int i = 0; i < keys; i++)
+        {
+            ExpandRoad(3, true, false);
+        }
 
         //Istantiating.
         IstantiateRooms();
@@ -204,9 +209,13 @@ public class WorldGenerator : MonoBehaviour
                         case 3:
                             toSpawn = KeyRoom;
                             break;
+                        case 4:
+                            toSpawn = EnemyRoom;
+                            break;
                     }
 
-                    Instantiate(toSpawn, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
+                    GameObject room = Instantiate(toSpawn, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
+                    room.transform.parent = gameObject.transform;
                 }
 
             }
@@ -225,6 +234,7 @@ public class WorldGenerator : MonoBehaviour
                 {
                     GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength) + roomX / 2 + bridgeLength / 2, 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
                     bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
+                    bridge.transform.parent = gameObject.transform;
                 }
             }
         }
@@ -237,6 +247,7 @@ public class WorldGenerator : MonoBehaviour
                 {
                     GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 90, 0));
                     bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
+                    bridge.transform.parent = gameObject.transform;
                 }
             }
         }
