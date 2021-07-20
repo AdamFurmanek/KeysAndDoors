@@ -34,6 +34,10 @@ public class WorldGenerator : MonoBehaviour
         //Generate rooms with key and door.
         ExpandRoad(2, true, false);
         ExpandRoad(3, true, false);
+        ExpandRoad(3, true, false);
+        ExpandRoad(3, true, false);
+        ExpandRoad(3, true, false);
+        ExpandRoad(3, true, false);
 
         //Istantiating.
         IstantiateRooms();
@@ -220,7 +224,7 @@ public class WorldGenerator : MonoBehaviour
                 if (map[x, z] != 0 && map[x + 1, z] != 0)
                 {
                     GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength) + roomX / 2 + bridgeLength / 2, 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
-                    bridge.transform.localScale = new Vector3(bridgeLength / 10, 1, 0.2f);
+                    bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
                 }
             }
         }
@@ -231,8 +235,8 @@ public class WorldGenerator : MonoBehaviour
             {
                 if (map[x, z] != 0 && map[x, z + 1] != 0)
                 {
-                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 0, 0));
-                    bridge.transform.localScale = new Vector3(0.2f, 1, bridgeLength / 10);
+                    GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 90, 0));
+                    bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
                 }
             }
         }
