@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             health -= Time.deltaTime * 10;
+            StartCoroutine(GameController.Instance.cameraNavigation.GetComponent<CameraShaking>().Shake(0.15f, 0.4f));
         }
     }
 
