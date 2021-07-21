@@ -9,11 +9,13 @@ public class GameController : MonoBehaviour
     private static GameController _instance;
     public static GameController Instance { get { return _instance; } }
 
-    public GameObject Menu, Restart, Panel;
+    public GameObject menu, restart, panel;
+    public GameObject gameEnds, bestScore;
+    public GameObject worldGenerator, cameraNavigation;
 
     TimeSpan timePlaying;
     float elapsedTime;
-    bool gameContinues;
+    public static bool gameContinues;
 
     private void Awake()
     {
@@ -37,41 +39,53 @@ public class GameController : MonoBehaviour
     public void StartMenu()
     {
         StartGame(0);
-        Menu.SetActive(true);
-        Restart.SetActive(false);
-        Panel.SetActive(false);
+        menu.SetActive(true);
+        restart.SetActive(false);
+        panel.SetActive(false);
+        gameContinues = false;
     }
 
     public void StartGame(int players)
     {
-        Menu.SetActive(false);
-        Restart.SetActive(false);
-        Panel.SetActive(true);
+        menu.SetActive(false);
+        restart.SetActive(false);
+        panel.SetActive(true);
 
         EnemyController.Restart();
         Keys.Restart();
         PlayerController.Restart();
 
-        StartCoroutine(WorldGenerator.Instance.GenerateWorld(players));
+        StartCoroutine(worldGenerator.GetComponent<WorldGenerator>().GenerateWorld(players));
         gameContinues = true;
         elapsedTime = 0;
         StartCoroutine(UpdateTimer());
+
+        cameraNavigation.GetComponent<CameraNavigation>().ResetCamera();
     }
 
     public void GameOver()
     {
-        Menu.SetActive(false);
-        Restart.SetActive(true);
-        Panel.SetActive(true);
+        menu.SetActive(false);
+        restart.SetActive(true);
+        panel.SetActive(true);
         gameContinues = false;
+        gameEnds.GetComponent<TextMeshProUGUI>().text = "Game Over";
+        bestScore.GetComponent<TextMeshProUGUI>().text = "best score: " + TimeSpan.FromSeconds(PlayerPrefs.GetFloat("HighScore", 3599.99f)).ToString("mm':'ss':'ff");
+
     }
 
     public void GameWon()
     {
-        Menu.SetActive(false);
-        Restart.SetActive(true);
-        Panel.SetActive(true);
+        menu.SetActive(false);
+        restart.SetActive(true);
+        panel.SetActive(true);
         gameContinues = false;
+        if(elapsedTime < PlayerPrefs.GetFloat("HighScore", 3599.99f))
+        {
+            PlayerPrefs.SetFloat("HighScore", elapsedTime);
+        }
+        gameEnds.GetComponent<TextMeshProUGUI>().text = "You won!";
+        bestScore.GetComponent<TextMeshProUGUI>().text = "best score: " + TimeSpan.FromSeconds(PlayerPrefs.GetFloat("HighScore", 3599.99f)).ToString("mm':'ss':'ff");
     }
     
     private IEnumerator UpdateTimer()

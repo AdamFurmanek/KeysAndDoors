@@ -5,9 +5,6 @@ using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
-    private static WorldGenerator _instance;
-    public static WorldGenerator Instance { get { return _instance; } }
-
     [SerializeField] private GameObject EmptyRoom, DoorRoom, KeyRoom, EnemyRoom, PlayerRoom, Bridge;
 
     [SerializeField] private int mapX, mapZ;
@@ -16,18 +13,6 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private int rooms, keys, doors, enemies;
 
     private int[,] map;
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
 
     public IEnumerator GenerateWorld(int players)
     {

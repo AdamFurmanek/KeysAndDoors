@@ -1209,9 +1209,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c353d6afc6380094f858e690e1958a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Menu: {fileID: 1984867351}
-  Restart: {fileID: 1297760498}
-  Panel: {fileID: 45028149}
+  menu: {fileID: 1984867351}
+  restart: {fileID: 1297760498}
+  panel: {fileID: 45028149}
+  gameEnds: {fileID: 264602189}
+  bestScore: {fileID: 385789646}
+  worldGenerator: {fileID: 1731125371}
+  cameraNavigation: {fileID: 1120755242}
 --- !u!1 &753187203
 GameObject:
   m_ObjectHideFlags: 0
