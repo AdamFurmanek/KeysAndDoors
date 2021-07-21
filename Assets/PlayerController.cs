@@ -4,12 +4,29 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    private float health = 100;
+    public static List<GameObject> players = new List<GameObject>();
+
+    private void Start()
+    {
+        players.Add(gameObject);
+    }
 
     void Update()
     {
+        if(players.Count == 1)
+        {
+            PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + (int)health;
+        }
+        else
+        {
+            PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + players.Count;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -20,5 +37,21 @@ public class PlayerController : MonoBehaviour
                 GetComponent<NavMeshAgent>().SetDestination(hit.point);
             }
         }
+
+        if(health <= 1)
+        {
+            GameController.Instance.GameOver();
+            players = new List<GameObject>();
+            GameObject.Destroy(gameObject);
+        }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            health -= Time.deltaTime * 10;
+        }
+    }
+
 }

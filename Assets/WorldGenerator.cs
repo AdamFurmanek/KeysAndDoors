@@ -5,7 +5,10 @@ using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject EmptyRoom, DoorRoom, KeyRoom, EnemyRoom, Bridge;
+    private static WorldGenerator _instance;
+    public static WorldGenerator Instance { get { return _instance; } }
+
+    [SerializeField] private GameObject EmptyRoom, DoorRoom, KeyRoom, EnemyRoom, PlayerRoom, Bridge;
 
     [SerializeField] private int mapX, mapZ;
     [SerializeField] private float roomX, roomZ, bridgeLength;
@@ -14,8 +17,25 @@ public class WorldGenerator : MonoBehaviour
 
     private int[,] map;
 
-    void Awake()
+    private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+    public void GenerateWorld(int players)
+    {
+        foreach(Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
         ResetMap();
 
         //Initial cross in the center of the map.
@@ -29,19 +49,29 @@ public class WorldGenerator : MonoBehaviour
         //Generate rooms, doors, keys.
         for (int i = 0; i < rooms; i++)
         {
-            ExpandRoad(1, true, true);
+            ExpandRoad(true, true);
         }
         for (int i = 0; i < enemies; i++)
         {
-            ExpandRoad(4, true, true);
+            SwapRoom(1, 4);
         }
         for (int i = 0; i < doors; i++)
         {
-            ExpandRoad(2, true, false);
+            SwapRoom(1, 2);
         }
         for (int i = 0; i < keys; i++)
         {
-            ExpandRoad(3, true, false);
+            SwapRoom(1, 3);
+        }
+        //Player in the centrum.
+        if (players > 0)
+        {
+            map[centrumX, centrumZ] = 5;
+        }
+        //Additional players.
+        for (int i = 1; i < players; i++)
+        {
+            SwapRoom(1, 5);
         }
 
         //Istantiating.
@@ -72,7 +102,7 @@ public class WorldGenerator : MonoBehaviour
         public Vector2Int rearRoad; //Only road connected to expandableRoad.
     }
 
-    void ExpandRoad(int type, bool front, bool side)
+    void ExpandRoad(bool front, bool side)
     {
         //Ends of the roads.
         List<ExpandableRoad> expandableRoads = new List<ExpandableRoad>();
@@ -121,16 +151,16 @@ public class WorldGenerator : MonoBehaviour
             {
                 if (rearRoad.x == expandableRoad.x)
                 {
-                    newRoads += ExpandSideRoad(type, rearRoad, expandableRoad, newRoad, 1, 0);
+                    newRoads += ExpandSideRoad(rearRoad, expandableRoad, newRoad, 1, 0);
 
-                    newRoads += ExpandSideRoad(type, rearRoad, expandableRoad, newRoad, -1, 0);
+                    newRoads += ExpandSideRoad(rearRoad, expandableRoad, newRoad, -1, 0);
                 }
 
                 else
                 {
-                    newRoads += ExpandSideRoad(type, rearRoad, expandableRoad, newRoad, 0, 1);
+                    newRoads += ExpandSideRoad(rearRoad, expandableRoad, newRoad, 0, 1);
 
-                    newRoads += ExpandSideRoad(type, rearRoad, expandableRoad, newRoad, 0, -1);
+                    newRoads += ExpandSideRoad(rearRoad, expandableRoad, newRoad, 0, -1);
                 }
             }
 
@@ -140,13 +170,13 @@ public class WorldGenerator : MonoBehaviour
                 if (InBounds(newRoad.x, newRoad.y))
                 {
                     if (newRoads == 0 || Random.Range(0.0f, 1.0f) > frontProbability)
-                        map[newRoad.x, newRoad.y] = type;
+                        map[newRoad.x, newRoad.y] = 1;
                 }
             }
         }
     }
 
-    int ExpandSideRoad(int type, Vector2Int rearRoad, Vector2Int expandableRoad, Vector2Int newRoad, int xOffset, int zOffset)
+    int ExpandSideRoad(Vector2Int rearRoad, Vector2Int expandableRoad, Vector2Int newRoad, int xOffset, int zOffset)
     {
         //Check if potential side road won't connect with existing road making loop.
         if (!IsRoad(rearRoad.x + xOffset, rearRoad.y + zOffset))
@@ -157,7 +187,7 @@ public class WorldGenerator : MonoBehaviour
                 if (Random.Range(0.0f, 1.0f) < sideProbability)
                 {
                     //Placing side road.
-                    map[expandableRoad.x + xOffset, expandableRoad.y + zOffset] = type;
+                    map[expandableRoad.x + xOffset, expandableRoad.y + zOffset] = 1;
                     return 1;
                 }
             }
@@ -186,6 +216,20 @@ public class WorldGenerator : MonoBehaviour
             return map[x, z];
     }
 
+    void SwapRoom(int destination, int value)
+    {
+        while (true)
+        {
+            int x = Random.Range(0, mapX);
+            int z = Random.Range(0, mapZ);
+            if(map[x,z] == destination)
+            {
+                map[x, z] = value;
+                break;
+            }
+        }
+    }
+
     void IstantiateRooms()
     {
         int centrumX = mapX / 2, centrumZ = mapZ / 2;
@@ -211,6 +255,9 @@ public class WorldGenerator : MonoBehaviour
                             break;
                         case 4:
                             toSpawn = EnemyRoom;
+                            break;
+                        case 5:
+                            toSpawn = PlayerRoom;
                             break;
                     }
 

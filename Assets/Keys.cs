@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Keys : MonoBehaviour
@@ -10,12 +11,17 @@ public class Keys : MonoBehaviour
     void Start()
     {
         howManyExist++;
+        PanelController.Instance.keys.GetComponent<TextMeshProUGUI>().text = howManyFounded + "/" + howManyExist;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        howManyFounded++;
-        gameObject.SetActive(false);
+        if(other.gameObject.tag == "Player")
+        {
+            howManyFounded++;
+            PanelController.Instance.keys.GetComponent<TextMeshProUGUI>().text = howManyFounded + "/" + howManyExist;
+            gameObject.SetActive(false);
+        }
     }
 
 }
