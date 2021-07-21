@@ -18,8 +18,9 @@ public class CameraNavigation : MonoBehaviour
 
     void Update()
     {
-        if (GameController.gameContinues)
+        if (GameController.Instance.gameContinues)
         {
+
             //Zooming camera.
             Vector3 newPosition = camera.transform.localPosition + Vector3.down * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomSensitivity;
             newPosition.y = Mathf.Clamp(newPosition.y, 1, 200);
@@ -65,10 +66,79 @@ public class CameraNavigation : MonoBehaviour
 
                 directionPoint.transform.localEulerAngles = newRotation;
             }
+
+            //Moving camera with keyboard + Escape for back to menu.
+            Keyboard();
+
         }
         else
         {
             directionPoint.transform.eulerAngles += new Vector3(0, Time.deltaTime * 4, 0);
+        }
+    }
+
+    public void Keyboard()
+    {
+        //Back to menu.
+        if (Input.GetKeyDown(KeyCode.Escape) && GameController.Instance.gameContinues)
+        {
+            GameController.Instance.StartMenu();
+        }
+
+        //WASD to move camera.
+        float x = 0, z = 0;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            z += Time.deltaTime * moveSensitivity / 20;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            x -= Time.deltaTime * moveSensitivity / 20;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            z -= Time.deltaTime * moveSensitivity / 20;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            x += Time.deltaTime * moveSensitivity / 20;
+        }
+
+        if(x != 0 || z != 0)
+        {
+            trackedObject = null;
+
+            Vector3 desiredMove = new Vector3(x, 0, z) * Time.deltaTime * moveSensitivity;
+
+            desiredMove = Quaternion.Euler(new Vector3(0f, directionPoint.transform.eulerAngles.y, 0f)) * desiredMove;
+            desiredMove = directionPoint.transform.InverseTransformDirection(desiredMove);
+
+            directionPoint.transform.Translate(desiredMove, Space.Self);
+        }
+
+        //Rotating camera with Q and E.
+        float y = 0;
+        if (Input.GetKey(KeyCode.Q))
+        {
+            y += Time.deltaTime * rotationSensitivity / 20;
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            y -= Time.deltaTime * rotationSensitivity / 20;
+        }
+        Vector3 newRotation = directionPoint.transform.localEulerAngles + new Vector3(0, y, 0) * Time.deltaTime * rotationSensitivity;
+        newRotation.x = Mathf.Clamp(newRotation.x, 270, 359);
+
+        directionPoint.transform.localEulerAngles = newRotation;
+
+        //Tracking object with R.
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (PlayerController.players.Count > 0)
+            {
+                trackedObject = PlayerController.players[0];
+            }
         }
     }
 

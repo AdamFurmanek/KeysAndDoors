@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 
     TimeSpan timePlaying;
     float elapsedTime;
-    public static bool gameContinues;
+    public bool gameContinues;
 
     private void Awake()
     {
