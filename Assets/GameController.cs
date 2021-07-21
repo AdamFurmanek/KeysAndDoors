@@ -47,6 +47,15 @@ public class GameController : MonoBehaviour
 
     public void StartGame(int players)
     {
+        if (players > 0)
+        {
+            PlaySong(1);
+        }
+        else
+        {
+            PlaySong(0);
+        }
+
         menu.SetActive(false);
         restart.SetActive(false);
         panel.SetActive(true);
@@ -65,6 +74,7 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        PlaySong(3);
         menu.SetActive(false);
         restart.SetActive(true);
         panel.SetActive(true);
@@ -76,6 +86,7 @@ public class GameController : MonoBehaviour
 
     public void GameWon()
     {
+        PlaySong(2);
         menu.SetActive(false);
         restart.SetActive(true);
         panel.SetActive(true);
@@ -103,5 +114,19 @@ public class GameController : MonoBehaviour
             yield return null;
         }
     }
-    
+
+    void PlaySong(int index)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            if(i != index)
+            {
+                transform.GetChild(i).GetComponent<Song>().Stop();
+            }
+            else
+            {
+                transform.GetChild(i).GetComponent<Song>().Play();
+            }
+        }
+    }
 }
