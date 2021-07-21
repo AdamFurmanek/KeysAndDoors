@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
         {
             health -= Time.deltaTime * 10;
             StartCoroutine(GameController.Instance.cameraNavigation.GetComponent<CameraShaking>().Shake(0.15f, 0.4f));
+            GetComponent<ParticleSystem>().Play();
         }
     }
 

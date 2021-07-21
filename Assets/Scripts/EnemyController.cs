@@ -45,4 +45,12 @@ public class EnemyController : MonoBehaviour
             navMesh.SetDestination(target.transform.position);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            GetComponent<ParticleSystem>().Play();
+        }
+    }
 }
