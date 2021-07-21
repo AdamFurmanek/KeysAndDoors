@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-
-
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -13,7 +11,7 @@ public class Door : MonoBehaviour
             if(Keys.howManyFounded == Keys.howManyExist)
             {
                 GameController.Instance.GameWon();
-                PlayerController.players = new List<GameObject>();
+                PlayerController.Restart();
                 GameObject.Destroy(other.gameObject);
             }
             else

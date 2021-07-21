@@ -10,10 +10,18 @@ public class EnemyController : MonoBehaviour
 
     private static int howManyExist = 0;
 
+    public static void Restart()
+    {
+        howManyExist = 0;
+    }
+
     void Start()
     {
         howManyExist++;
-        PanelController.Instance.enemies.GetComponent<TextMeshProUGUI>().text = "" + howManyExist;
+        if (PanelController.Instance != null)
+        {
+            PanelController.Instance.enemies.GetComponent<TextMeshProUGUI>().text = "" + howManyExist;
+        }
 
         navMesh = GetComponent<NavMeshAgent>();
     }

@@ -11,6 +11,11 @@ public class PlayerController : MonoBehaviour
     private float health = 100;
     public static List<GameObject> players = new List<GameObject>();
 
+    public static void Restart()
+    {
+        players = new List<GameObject>();
+    }
+
     private void Start()
     {
         players.Add(gameObject);
@@ -20,11 +25,17 @@ public class PlayerController : MonoBehaviour
     {
         if(players.Count == 1)
         {
-            PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + (int)health;
+            if (PanelController.Instance != null)
+            {
+                PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + (int)health;
+            }
         }
         else
         {
-            PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + players.Count;
+            if (PanelController.Instance != null)
+            {
+                PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + players.Count;
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -41,7 +52,7 @@ public class PlayerController : MonoBehaviour
         if(health <= 1)
         {
             GameController.Instance.GameOver();
-            players = new List<GameObject>();
+            Restart();
             GameObject.Destroy(gameObject);
         }
     }

@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     private static GameController _instance;
     public static GameController Instance { get { return _instance; } }
 
+    public GameObject Menu, Restart, Panel;
+
     TimeSpan timePlaying;
     float elapsedTime;
     bool gameContinues;
@@ -29,12 +31,28 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        StartGame();
+        StartMenu();
     }
 
-    public void StartGame()
+    public void StartMenu()
     {
-        WorldGenerator.Instance.GenerateWorld(1);
+        StartGame(0);
+        Menu.SetActive(true);
+        Restart.SetActive(false);
+        Panel.SetActive(false);
+    }
+
+    public void StartGame(int players)
+    {
+        Menu.SetActive(false);
+        Restart.SetActive(false);
+        Panel.SetActive(true);
+
+        EnemyController.Restart();
+        Keys.Restart();
+        PlayerController.Restart();
+
+        StartCoroutine(WorldGenerator.Instance.GenerateWorld(players));
         gameContinues = true;
         elapsedTime = 0;
         StartCoroutine(UpdateTimer());
@@ -42,11 +60,17 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        Menu.SetActive(false);
+        Restart.SetActive(true);
+        Panel.SetActive(true);
         gameContinues = false;
     }
 
     public void GameWon()
     {
+        Menu.SetActive(false);
+        Restart.SetActive(true);
+        Panel.SetActive(true);
         gameContinues = false;
     }
     
@@ -57,7 +81,10 @@ public class GameController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);
             string timeString = "" + timePlaying.ToString("mm':'ss':'ff");
-            PanelController.Instance.time.GetComponent<TextMeshProUGUI>().text = timeString;
+            if (PanelController.Instance != null)
+            {
+                PanelController.Instance.time.GetComponent<TextMeshProUGUI>().text = timeString;
+            }
 
             yield return null;
         }

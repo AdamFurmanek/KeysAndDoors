@@ -29,12 +29,16 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateWorld(int players)
+    public IEnumerator GenerateWorld(int players)
     {
-        foreach(Transform child in transform)
+        //Clearing the map.
+        foreach (Transform child in transform)
         {
             GameObject.Destroy(child.gameObject);
         }
+
+        //Need to wait 1 frame, otherwise NavMesh will bake on old objects.
+        yield return 0;
 
         ResetMap();
 
