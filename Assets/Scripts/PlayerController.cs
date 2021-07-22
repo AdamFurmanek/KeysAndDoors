@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 {
     private float health = 100;
     public static List<GameObject> players = new List<GameObject>();
+    float lastTimeClicked = 0;
 
     public static void Restart()
     {
@@ -40,6 +41,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (Time.time - lastTimeClicked < 0.2)
+            {
+                GetComponent<NavMeshAgent>().speed = 40;
+            }
+            else
+            {
+                GetComponent<NavMeshAgent>().speed = 20;
+            }
+
+            lastTimeClicked = Time.time;
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             
