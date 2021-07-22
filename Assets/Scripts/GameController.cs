@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     private static GameController _instance;
     public static GameController Instance { get { return _instance; } }
 
-    public GameObject menu, restart, panel;
+    public GameObject menu, restart, panel, instruction;
     public GameObject gameEnds, bestScore;
     public GameObject worldGenerator, cameraNavigation;
 
@@ -98,6 +98,16 @@ public class GameController : MonoBehaviour
         }
         gameEnds.GetComponent<TextMeshProUGUI>().text = "You won!";
         bestScore.GetComponent<TextMeshProUGUI>().text = "best score: " + TimeSpan.FromSeconds(PlayerPrefs.GetFloat("HighScore", 3599.99f)).ToString("mm':'ss':'ff");
+    }
+
+    public void OpenInstruction()
+    {
+        instruction.SetActive(true);
+    }
+
+    public void CloseInstruction()
+    {
+        instruction.SetActive(false);
     }
     
     private IEnumerator UpdateTimer()
