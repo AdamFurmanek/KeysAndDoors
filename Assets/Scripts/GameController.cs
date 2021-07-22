@@ -74,6 +74,7 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        PlaySound(5);
         PlaySong(3);
         menu.SetActive(false);
         restart.SetActive(true);
@@ -86,6 +87,7 @@ public class GameController : MonoBehaviour
 
     public void GameWon()
     {
+        PlaySound(4);
         PlaySong(2);
         menu.SetActive(false);
         restart.SetActive(true);
@@ -128,5 +130,10 @@ public class GameController : MonoBehaviour
                 transform.GetChild(i).GetComponent<Song>().Play();
             }
         }
+    }
+
+    void PlaySound(int index)
+    {
+        transform.GetChild(index).GetComponent<Song>().Play();
     }
 }
