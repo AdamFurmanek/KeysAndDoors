@@ -3043,10 +3043,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EmptyRoom: {fileID: 7412442230237944663, guid: 1d55d0658b5958a419a58c38f3e61c73, type: 3}
-  DoorRoom: {fileID: 7412442230237944663, guid: 85d3e4fa5f7940f4b9d77059aa2e1ac0, type: 3}
-  KeyRoom: {fileID: 7412442230237944663, guid: b80aaca084e3d784082ddee50aa57fd9, type: 3}
-  EnemyRoom: {fileID: 7412442230237944663, guid: 9f7a9e88dab59594d8f6afca9d0d0e04, type: 3}
-  PlayerRoom: {fileID: 7412442230237944663, guid: a01ff702e4d3bc847b3dafa5385ae961, type: 3}
+  DoorRoom: {fileID: 7412442230237944663, guid: 0d410fccd596b32478889558617b1499, type: 3}
+  KeyRoom: {fileID: 7412442230237944663, guid: 04ed2b828ca1b5843a21ce08f660e6c7, type: 3}
+  EnemyRoom: {fileID: 7412442230237944663, guid: b98324844a01af44a95abb5087fd1009, type: 3}
+  PlayerRoom: {fileID: 7412442230237944663, guid: 0f7bd881914e4b346a5d312d8f9b8b3a, type: 3}
   Bridge: {fileID: 7412442230237944663, guid: ce64439c5e2548d49a9d2a0bed86a61d, type: 3}
   mapX: 40
   mapZ: 40

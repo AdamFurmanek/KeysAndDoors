@@ -82,7 +82,6 @@ public class GameController : MonoBehaviour
         gameContinues = false;
         gameEnds.GetComponent<TextMeshProUGUI>().text = "Game Over";
         bestScore.GetComponent<TextMeshProUGUI>().text = "best score: " + TimeSpan.FromSeconds(PlayerPrefs.GetFloat("HighScore", 3599.99f)).ToString("mm':'ss':'ff");
-
     }
 
     public void GameWon()

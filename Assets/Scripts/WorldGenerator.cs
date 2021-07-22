@@ -14,6 +14,8 @@ public class WorldGenerator : MonoBehaviour
 
     private int[,] map;
 
+    private List<GameObject> roomsList, bridgesList;
+
     public IEnumerator GenerateWorld(int players)
     {
         //Clearing the map.
@@ -221,6 +223,7 @@ public class WorldGenerator : MonoBehaviour
 
     void IstantiateRooms()
     {
+        roomsList = new List<GameObject>();
         int centrumX = mapX / 2, centrumZ = mapZ / 2;
 
         for (int x = 0; x < mapX; x++)
@@ -251,6 +254,7 @@ public class WorldGenerator : MonoBehaviour
                     }
 
                     GameObject room = Instantiate(toSpawn, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
+                    roomsList.Add(room);
                     room.transform.parent = gameObject.transform;
                 }
 
@@ -260,6 +264,7 @@ public class WorldGenerator : MonoBehaviour
 
     void IstantiateBridges()
     {
+        bridgesList = new List<GameObject>();
         int centrumX = mapX / 2, centrumZ = mapZ / 2;
 
         for (int x = 0; x < mapX - 1; x++)
@@ -271,6 +276,7 @@ public class WorldGenerator : MonoBehaviour
                     GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength) + roomX / 2 + bridgeLength / 2, 0, (z - centrumZ) * (roomZ + bridgeLength)), Quaternion.Euler(0, 0, 0));
                     bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
                     bridge.transform.parent = gameObject.transform;
+                    bridgesList.Add(bridge);
                 }
             }
         }
@@ -284,7 +290,66 @@ public class WorldGenerator : MonoBehaviour
                     GameObject bridge = Instantiate(Bridge, new Vector3((x - centrumX) * (roomX + bridgeLength), 0, (z - centrumZ) * (roomZ + bridgeLength) + roomZ / 2 + bridgeLength / 2), Quaternion.Euler(0, 90, 0));
                     bridge.transform.localScale = new Vector3(bridgeLength, 1, 2f);
                     bridge.transform.parent = gameObject.transform;
+                    bridgesList.Add(bridge);
                 }
+            }
+        }
+    }
+
+    private void AllWalls()
+    {
+        foreach (GameObject room in roomsList)
+        {
+            room.GetComponent<SwitchingWalls>().AllWalls();
+        }
+        foreach (GameObject bridge in bridgesList)
+        {
+            bridge.GetComponent<SwitchingWalls>().AllWalls();
+        }
+    }
+
+    private void OnlyInsideWalls()
+    {
+        foreach (GameObject room in roomsList)
+        {
+            room.GetComponent<SwitchingWalls>().OnlyInsideWalls();
+        }
+        foreach (GameObject bridge in bridgesList)
+        {
+            bridge.GetComponent<SwitchingWalls>().OnlyInsideWalls();
+        }
+    }
+
+    private void NoWalls()
+    {
+        foreach (GameObject room in roomsList)
+        {
+            room.GetComponent<SwitchingWalls>().NoWalls();
+        }
+        foreach (GameObject bridge in bridgesList)
+        {
+            bridge.GetComponent<SwitchingWalls>().NoWalls();
+        }
+    }
+
+    private void Update()
+    {
+        if (GameController.Instance.gameContinues)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Debug.Log("1");
+                AllWalls();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Debug.Log("2");
+                OnlyInsideWalls();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                Debug.Log("3");
+                NoWalls();
             }
         }
     }
