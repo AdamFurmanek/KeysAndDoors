@@ -1295,6 +1295,7 @@ MonoBehaviour:
   bestScore: {fileID: 385789646}
   worldGenerator: {fileID: 1731125371}
   cameraNavigation: {fileID: 1120755242}
+  gameContinues: 0
 --- !u!1 &753187203
 GameObject:
   m_ObjectHideFlags: 0
