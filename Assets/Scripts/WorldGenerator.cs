@@ -338,17 +338,14 @@ public class WorldGenerator : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Debug.Log("1");
                 AllWalls();
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                Debug.Log("2");
                 OnlyInsideWalls();
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                Debug.Log("3");
                 NoWalls();
             }
         }

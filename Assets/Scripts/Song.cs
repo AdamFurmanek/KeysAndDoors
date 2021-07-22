@@ -7,7 +7,7 @@ public class Song : MonoBehaviour
     private AudioSource audioSource;
     public int howLong;
 
-    private void Start()
+    private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
     }

@@ -27,8 +27,6 @@ public class GameController : MonoBehaviour
         {
             _instance = this;
         }
-
-        gameContinues = false;
     }
 
     void Start()
@@ -108,6 +106,11 @@ public class GameController : MonoBehaviour
     public void CloseInstruction()
     {
         instruction.SetActive(false);
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
     
     private IEnumerator UpdateTimer()
