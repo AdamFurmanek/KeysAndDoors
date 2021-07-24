@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float health = 100;
     public static List<GameObject> players = new List<GameObject>();
     float lastTimeClicked = 0;
+    public float walkingSpeed, runningSpeed;
     [HideInInspector] public bool running = false;
 
     public static void Restart()
@@ -45,12 +46,12 @@ public class PlayerController : MonoBehaviour
             if (Time.time - lastTimeClicked < 0.2)
             {
                 running = true;
-                GetComponent<NavMeshAgent>().speed = 40;
+                GetComponent<NavMeshAgent>().speed = runningSpeed;
             }
             else
             {
                 running = false;
-                GetComponent<NavMeshAgent>().speed = 20;
+                GetComponent<NavMeshAgent>().speed = walkingSpeed;
             }
 
             lastTimeClicked = Time.time;
