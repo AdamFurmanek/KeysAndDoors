@@ -87,6 +87,10 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
+    #region Generating
+
+    //Complicated road generation system developed in an earlier project.
+
     struct ExpandableRoad
     {
         public Vector2Int expandableRoad; //End of the road that can be expanded.
@@ -206,6 +210,8 @@ public class WorldGenerator : MonoBehaviour
         else
             return map[x, z];
     }
+
+    #endregion
 
     void SwapRoom(int destination, int value)
     {
@@ -334,7 +340,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (GameController.Instance.gameContinues)
+        if (GameController.Instance.GameContinues)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {

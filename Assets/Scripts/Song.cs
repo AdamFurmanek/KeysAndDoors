@@ -5,7 +5,7 @@ using UnityEngine;
 public class Song : MonoBehaviour
 {
     private AudioSource audioSource;
-    public int howLong;
+    [SerializeField] private int howLong;
 
     private void Awake()
     {

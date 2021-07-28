@@ -8,7 +8,7 @@ public class Door : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            if(Keys.howManyFounded == Keys.howManyExist)
+            if(Key.HowManyFounded == Key.HowManyExist)
             {
                 GameController.Instance.GameWon();
                 PlayerController.Restart();
@@ -16,7 +16,7 @@ public class Door : MonoBehaviour
             }
             else
             {
-
+                //Inform player that he have not enough keys.
             }
         }
     }

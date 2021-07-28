@@ -9,15 +9,15 @@ public class GameController : MonoBehaviour
     private static GameController _instance;
     public static GameController Instance { get { return _instance; } }
 
-    public GameObject menu, restart, panel, instruction;
-    public GameObject gameEnds, bestScore;
+    [SerializeField] private GameObject menu, restart, panel, instruction;
+    [SerializeField] private GameObject gameEnds, bestScore;
     public GameObject worldGenerator, cameraNavigation;
 
-    TimeSpan timePlaying;
-    float elapsedTime;
-    public bool gameContinues;
+    private TimeSpan timePlaying;
+    private float elapsedTime;
+    public bool GameContinues { get; set; }
 
-    private void Awake()
+    void Awake()
     {
         if (_instance != null && _instance != this)
         {
@@ -37,36 +37,50 @@ public class GameController : MonoBehaviour
     public void StartMenu()
     {
         StartGame(0);
+
+        //Setting visible panels.
         menu.SetActive(true);
         restart.SetActive(false);
         panel.SetActive(false);
-        gameContinues = false;
+
+        //Setting GameContinues property.
+        GameContinues = false;
     }
 
     public void StartGame(int players)
     {
+        //If players > 0 - we are in game
         if (players > 0)
         {
             PlaySong(1);
         }
+        //Else - we are i menu
         else
         {
             PlaySong(0);
         }
 
+        //Setting visible panels.
         menu.SetActive(false);
         restart.SetActive(false);
         panel.SetActive(true);
 
+        //Restarting values.
         EnemyController.Restart();
-        Keys.Restart();
+        Key.Restart();
         PlayerController.Restart();
 
+        //Generating map.
         StartCoroutine(worldGenerator.GetComponent<WorldGenerator>().GenerateWorld(players));
-        gameContinues = true;
+
+        //Setting GameContinues property.
+        GameContinues = true;
+
+        //Timer.
         elapsedTime = 0;
         StartCoroutine(UpdateTimer());
 
+        //Reset camera settings.
         cameraNavigation.GetComponent<CameraNavigation>().ResetCamera();
     }
 
@@ -77,7 +91,7 @@ public class GameController : MonoBehaviour
         menu.SetActive(false);
         restart.SetActive(true);
         panel.SetActive(true);
-        gameContinues = false;
+        GameContinues = false;
         gameEnds.GetComponent<TextMeshProUGUI>().text = "Game Over";
         bestScore.GetComponent<TextMeshProUGUI>().text = "best score: " + TimeSpan.FromSeconds(PlayerPrefs.GetFloat("HighScore", 3599.99f)).ToString("mm':'ss':'ff");
     }
@@ -89,7 +103,7 @@ public class GameController : MonoBehaviour
         menu.SetActive(false);
         restart.SetActive(true);
         panel.SetActive(true);
-        gameContinues = false;
+        GameContinues = false;
         if(elapsedTime < PlayerPrefs.GetFloat("HighScore", 3599.99f))
         {
             PlayerPrefs.SetFloat("HighScore", elapsedTime);
@@ -113,9 +127,9 @@ public class GameController : MonoBehaviour
         Application.Quit();
     }
     
-    private IEnumerator UpdateTimer()
+    IEnumerator UpdateTimer()
     {
-        while (gameContinues)
+        while (GameContinues)
         {
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);
@@ -129,8 +143,10 @@ public class GameController : MonoBehaviour
         }
     }
 
+    //Turn off all songs except choosen one.
     void PlaySong(int index)
     {
+        //Childs with indexes 0 - 3 are songs.
         for(int i = 0; i < 4; i++)
         {
             if(i != index)
@@ -144,8 +160,10 @@ public class GameController : MonoBehaviour
         }
     }
 
+    //Just play sound.
     void PlaySound(int index)
     {
+        //Childs with indexes > 3 are sounds.
         transform.GetChild(index).GetComponent<Song>().Play();
     }
 }

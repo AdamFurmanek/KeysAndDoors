@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwitchingWalls : MonoBehaviour
 {
-    public List<GameObject> InsideWalls, OutsideWalls;
+    [SerializeField] private List<GameObject> InsideWalls, OutsideWalls;
 
     public void AllWalls()
     {

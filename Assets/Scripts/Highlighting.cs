@@ -7,7 +7,7 @@ public class Highlighting : MonoBehaviour
 
     void OnMouseEnter()
     {
-        if (GameController.Instance.gameContinues)
+        if (GameController.Instance.GameContinues)
         {
             Material material = GetComponent<MeshRenderer>().material;
             material.SetColor("_Color", material.color + new Color(0.2f, 0.2f, 0.2f));
@@ -16,7 +16,7 @@ public class Highlighting : MonoBehaviour
 
     void OnMouseExit()
     {
-        if (GameController.Instance.gameContinues)
+        if (GameController.Instance.GameContinues)
         {
             Material material = GetComponent<MeshRenderer>().material;
             material.SetColor("_Color", material.color - new Color(0.2f, 0.2f, 0.2f));

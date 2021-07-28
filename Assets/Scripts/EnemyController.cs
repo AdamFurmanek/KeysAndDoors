@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    NavMeshAgent navMesh;
+    private NavMeshAgent navMesh;
 
     private static int howManyExist = 0;
 
@@ -18,16 +18,14 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         howManyExist++;
-        if (PanelController.Instance != null)
-        {
-            PanelController.Instance.enemies.GetComponent<TextMeshProUGUI>().text = "" + howManyExist;
-        }
+        PanelController.Instance.enemies.GetComponent<TextMeshProUGUI>().text = "" + howManyExist;
 
         navMesh = GetComponent<NavMeshAgent>();
     }
 
     void Update()
     {
+        //Find closest player.
         if(PlayerController.players.Count > 0)
         {
             GameObject target = null;

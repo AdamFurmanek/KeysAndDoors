@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CameraNavigation : MonoBehaviour
 {
-
     private GameObject directionPoint;
     private Camera camera;
     private GameObject trackedObject;
@@ -18,7 +17,7 @@ public class CameraNavigation : MonoBehaviour
 
     void Update()
     {
-        if (GameController.Instance.gameContinues)
+        if (GameController.Instance.GameContinues)
         {
 
             //Zooming camera.
@@ -73,6 +72,7 @@ public class CameraNavigation : MonoBehaviour
         }
         else
         {
+            //Rotating camera in menu/endgame board.
             directionPoint.transform.eulerAngles += new Vector3(0, Time.deltaTime * 4, 0);
         }
     }
@@ -80,7 +80,7 @@ public class CameraNavigation : MonoBehaviour
     public void Keyboard()
     {
         //Back to menu.
-        if (Input.GetKeyDown(KeyCode.Escape) && GameController.Instance.gameContinues)
+        if (Input.GetKeyDown(KeyCode.Escape) && GameController.Instance.GameContinues)
         {
             GameController.Instance.StartMenu();
         }

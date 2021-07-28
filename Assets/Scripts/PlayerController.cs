@@ -8,11 +8,12 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public float health = 100;
     public static List<GameObject> players = new List<GameObject>();
-    float lastTimeClicked = 0;
-    public float walkingSpeed, runningSpeed;
+    [HideInInspector] public float Health { get; set; }
+    [SerializeField] private float walkingSpeed, runningSpeed;
     [HideInInspector] public bool running = false;
+
+    private float lastTimeClicked = 0;
 
     public static void Restart()
     {
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        Health = 100;
         players.Add(gameObject);
     }
 
@@ -30,7 +32,7 @@ public class PlayerController : MonoBehaviour
         {
             if (PanelController.Instance != null)
             {
-                PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + (int)health;
+                PanelController.Instance.health.GetComponent<TextMeshProUGUI>().text = "" + (int)Health;
             }
         }
         else
@@ -65,7 +67,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(health <= 1)
+        if(Health <= 1)
         {
             GameController.Instance.GameOver();
             Restart();
@@ -77,7 +79,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.tag == "Enemy")
         {
-            health -= Time.deltaTime * 10;
+            Health -= Time.deltaTime * 10;
             StartCoroutine(GameController.Instance.cameraNavigation.GetComponent<CameraShaking>().Shake(0.15f, 0.4f));
             GetComponent<ParticleSystem>().Play();
         }
